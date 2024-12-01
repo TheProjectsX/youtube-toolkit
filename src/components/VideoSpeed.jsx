@@ -1,26 +1,34 @@
-import React, { useState } from "react";
+import { useState } from "react";
 
 const VideoSpeedPage = () => {
-    const [selectedSpeed, setSelectedSpeed] = useState(1); // Default is 1x
-    const [customSpeed, setCustomSpeed] = useState("");
-
+    const [selectedSpeed, setSelectedSpeed] = useState(null); // Default is 1x
     const predefinedSpeeds = [1, 2, 3, 5, 8, 10];
+
+    const setVideoSpeed = async (speed) => {
+        const [tab] = await chrome.tabs.query({ active: true });
+
+        chrome.scripting.executeScript({
+            target: { tabId: tab.id },
+            args: [speed],
+            func: (speed) => {
+                const videoElement =
+                    document.querySelector("#ytd-player video");
+                videoElement.playbackRate = speed;
+            },
+        });
+    };
 
     const handleSpeedClick = (speed) => {
         setSelectedSpeed(speed);
-        setCustomSpeed(""); // Clear custom speed when a predefined one is selected
+        setVideoSpeed(speed);
     };
 
     const handleCustomSpeedChange = (e) => {
-        const value = e.target.value;
-        setCustomSpeed(value);
-        setSelectedSpeed(null); // Clear predefined selection when custom speed is entered
-    };
+        e.preventDefault();
+        const speed = parseFloat(e.target.speed.value);
+        setSelectedSpeed(speed);
 
-    const applyCustomSpeed = () => {
-        if (customSpeed) {
-            setSelectedSpeed(customSpeed);
-        }
+        setVideoSpeed(speed);
     };
 
     return (
@@ -43,39 +51,40 @@ const VideoSpeedPage = () => {
                 ))}
 
                 {/* Custom Speed Input */}
-                <div className="flex items-center gap-2">
+                <form
+                    onSubmit={handleCustomSpeedChange}
+                    className="flex items-center gap-2"
+                >
                     <div className="relative flex items-center">
                         <input
                             type="number"
+                            name="speed"
                             step="0.1"
-                            min="0.1"
+                            min={0.1}
                             placeholder="Custom x"
-                            value={customSpeed}
-                            onChange={handleCustomSpeedChange}
                             className="w-24 px-2 py-2 rounded-lg bg-gray-800 text-white text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-600"
+                            required
                         />
                     </div>
                     <button
-                        onClick={applyCustomSpeed}
-                        className={`py-2 px-4 rounded-lg text-sm font-medium shadow-md transition-all duration-200 ${
-                            customSpeed
-                                ? "bg-blue-600 hover:bg-blue-500"
-                                : "bg-gray-700 cursor-not-allowed"
-                        }`}
-                        disabled={!customSpeed}
+                        type="submit"
+                        className={`py-2 px-4 rounded-lg text-sm font-medium shadow-md transition-all duration-200 bg-blue-600 hover:bg-blue-500`}
                     >
                         Apply
                     </button>
-                </div>
+                </form>
             </div>
 
             {/* Display Selected Speed */}
-            {selectedSpeed && (
-                <p className="mt-6 text-lg">
-                    Selected Speed:{" "}
+
+            <p className="mt-6 text-lg">
+                Selected Speed:{" "}
+                {selectedSpeed ? (
                     <span className="font-bold">{selectedSpeed}x</span>
-                </p>
-            )}
+                ) : (
+                    <span className="font-bold italic">None</span>
+                )}
+            </p>
         </div>
     );
 };

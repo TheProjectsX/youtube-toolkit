@@ -6,5 +6,11 @@
     "action": {
         "default_popup": "index.html"
     },
-    "permissions": ["storage", "tabs"]
+    "permissions": ["storage", "tabs", "scripting"],
+    "icons": {
+        "16": "assets/logo.png",
+        "48": "assets/logo.png",
+        "128": "assets/logo.png"
+    },
+    "host_permissions": ["http://*/*", "https://*/*"]
 }
