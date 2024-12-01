@@ -3,8 +3,15 @@ import React, { useState } from "react";
 const YouTubeDislikePage = () => {
     const [isEnabled, setIsEnabled] = useState(false);
 
-    const handleToggle = () => {
-        setIsEnabled(!isEnabled);
+    chrome.storage.local.get(["turnOnYTDislike"], (result) => {
+        setIsEnabled(result.turnOnYTDislike);
+    });
+
+    const handleToggle = async () => {
+        const newStatus = !isEnabled;
+        setIsEnabled(newStatus);
+
+        await chrome.storage.local.set({ turnOnYTDislike: newStatus });
     };
 
     return (
