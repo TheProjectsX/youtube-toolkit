@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useState } from "react";
 
 const secondsToHHMMSS = (seconds) => {
     if (!seconds || seconds === "") return;
@@ -33,7 +33,6 @@ const RepeatSegmentPage = () => {
                 tabs[0].id,
                 { action: "get-repeat-segment-initial-value" },
                 (response) => {
-                    console.log(response);
                     setRepeating(response.running);
                     setPointA(response["repeat-segment--point-a"]);
                     setPointB(response["repeat-segment--point-b"]);
@@ -48,7 +47,6 @@ const RepeatSegmentPage = () => {
             activeTabId,
             { action: "get-video-timestamp", point: "a" },
             (response) => {
-                console.log(response);
                 const { timestamp } = response;
                 setPointA(timestamp);
             }

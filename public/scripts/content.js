@@ -10,14 +10,6 @@ window.addEventListener("youtubeVideoOpened", (e) => {
     updateDislikesData(videoId);
 });
 
-// Clean Up past Repeat Segment Data
-// chrome.storage.local.set({
-//     "repeat-segment--point-a": "",
-// });
-// chrome.storage.local.set({
-//     "repeat-segment--point-b": "",
-// });
-
 // Repeat Video Segments Controls
 let repeatSegmentInterval = null;
 

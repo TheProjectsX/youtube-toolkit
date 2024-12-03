@@ -43,7 +43,7 @@ window.addEventListener("hashchange", () => {
     }
 });
 
-// Optional: Trigger the event for the initial load, but only if it's a video page
+// Trigger the event for the initial load, but only if it's a video page
 setTimeout(() => {
     if (isVideoPage()) {
         notifyUrlChange();
@@ -62,18 +62,3 @@ const observer = new MutationObserver(() => {
 
 let previousUrl = window.location.href;
 observer.observe(document, { childList: true, subtree: true });
-
-/*
-// Observer Event listener
-window.addEventListener("youtubeVideoOpened", (e) => {
-    console.log("YouTube URL changed to:", e.detail.url);
-
-    // Example: Detect if it's a video page
-    if (e.detail.url.includes("watch?v=")) {
-        const videoId = new URLSearchParams(window.location.search).get("v");
-        console.log("Now playing video with ID:", videoId);
-    }
-});
-
-
-*/

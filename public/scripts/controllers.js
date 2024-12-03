@@ -82,7 +82,7 @@ const observeDislikeElementChange = () => {
 
 // Main function to Update Dislikes
 const updateDislikesData = async (videoId) => {
-    console.log(videoId);
+    // console.log(videoId);
     const result = await getStorageData(["turnOnYTDislike"]);
     if (!result.turnOnYTDislike) {
         return;
@@ -94,14 +94,14 @@ const updateDislikesData = async (videoId) => {
                 `https://returnyoutubedislikeapi.com/votes?videoId=${videoId}`
             )
         ).json();
-        console.log(data);
+        // console.log(data);
         if (data.status === 400) {
             return;
         }
 
         const formattedDislikes = formatNumberWithIntl(data.dislikes ?? 0);
 
-        console.log("Dislikes", formattedDislikes);
+        // console.log("Dislikes", formattedDislikes);
         await DOMSettled(300);
         setDislikeValue(formattedDislikes);
         observeDislikeElementChange();
