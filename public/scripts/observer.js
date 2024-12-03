@@ -44,9 +44,11 @@ window.addEventListener("hashchange", () => {
 });
 
 // Optional: Trigger the event for the initial load, but only if it's a video page
-if (isVideoPage()) {
-    notifyUrlChange();
-}
+setTimeout(() => {
+    if (isVideoPage()) {
+        notifyUrlChange();
+    }
+}, 1000);
 
 // Observe changes in the DOM (useful for SPAs like YouTube)
 const observer = new MutationObserver(() => {

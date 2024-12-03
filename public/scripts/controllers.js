@@ -1,3 +1,5 @@
+let textNodeClone;
+
 // Set Dislike value in the UI
 const setDislikeValue = async (value = "0") => {
     const likeButton = visibleElementQuerySelector(
@@ -13,7 +15,7 @@ const setDislikeValue = async (value = "0") => {
         return;
     }
 
-    const textNodeClone = (
+    textNodeClone = (
         likeButton.querySelector(
             ".yt-spec-button-shape-next__button-text-content"
         ) ||
@@ -27,12 +29,42 @@ const setDislikeValue = async (value = "0") => {
     ).cloneNode(true);
 
     textNodeClone.innerText = value;
-    disLikeButton.appendChild(textNodeClone);
+    disLikeButton.insertBefore(textNodeClone, null);
 
     disLikeButton.classList.remove("yt-spec-button-shape-next--icon-button");
     disLikeButton.classList.add("yt-spec-button-shape-next--icon-leading");
 
     return true;
+};
+
+// Observe if the Dislike Element is Changed after Like
+const observeDislikeElementChange = () => {
+    const disLikeButton = visibleElementQuerySelector(
+        "dislike-button-view-model button"
+    );
+
+    if (!disLikeButton) return;
+
+    // Create a MutationObserver
+    const observer = new MutationObserver((mutations) => {
+        // Disconnect the observer to prevent recursive triggering
+        observer.disconnect();
+
+        // Safely modify the DOM
+        if (!disLikeButton.contains(textNodeClone)) {
+            disLikeButton.insertBefore(textNodeClone, null);
+        }
+        disLikeButton.classList.remove(
+            "yt-spec-button-shape-next--icon-button"
+        );
+        disLikeButton.classList.add("yt-spec-button-shape-next--icon-leading");
+
+        // Reconnect the observer after modifications
+        observer.observe(disLikeButton, { childList: true, subtree: false });
+    });
+
+    // Initial observation
+    observer.observe(disLikeButton, { childList: true, subtree: false });
 };
 
 // Main function to Update Dislikes
@@ -59,6 +91,7 @@ const updateDislikesData = async (videoId) => {
         console.log("Dislikes", formattedDislikes);
         await DOMSettled(300);
         setDislikeValue(formattedDislikes);
+        observeDislikeElementChange();
     } catch (error) {
         console.log("Error:", error);
     }
