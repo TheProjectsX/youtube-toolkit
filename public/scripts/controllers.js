@@ -1,5 +1,18 @@
 let textNodeClone;
 
+// Get Chrome Storage Data
+const getStorageData = (keys, context = chrome) => {
+    return new Promise((resolve, reject) => {
+        context.storage.local.get(keys, (result) => {
+            if (context.runtime.lastError) {
+                reject(context.runtime.lastError);
+            } else {
+                resolve(result);
+            }
+        });
+    });
+};
+
 // Set Dislike value in the UI
 const setDislikeValue = async (value = "0") => {
     const likeButton = visibleElementQuerySelector(
@@ -16,12 +29,12 @@ const setDislikeValue = async (value = "0") => {
     }
 
     textNodeClone = (
-        likeButton.querySelector(
+        likeButton?.querySelector(
             ".yt-spec-button-shape-next__button-text-content"
         ) ||
-        likeButton.querySelector("button > div[class*='cbox']") ||
+        likeButton?.querySelector("button > div[class*='cbox']") ||
         (
-            likeButton.querySelector('div > span[role="text"]') ||
+            likeButton?.querySelector('div > span[role="text"]') ||
             document.querySelector(
                 'button > div.yt-spec-button-shape-next__button-text-content > span[role="text"]'
             )

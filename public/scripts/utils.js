@@ -1,16 +1,3 @@
-// Get Chrome Storage Data
-const getStorageData = (keys) => {
-    return new Promise((resolve, reject) => {
-        chrome.storage.local.get(keys, (result) => {
-            if (chrome.runtime.lastError) {
-                reject(chrome.runtime.lastError);
-            } else {
-                resolve(result);
-            }
-        });
-    });
-};
-
 // Function to format numbers in compact notation (e.g., k, M, B)
 const formatNumberWithIntl = (
     number,
@@ -40,7 +27,7 @@ const isElementVisible = (el) => {
 };
 
 const visibleElementQuerySelector = (query) => {
-    const elements = document.querySelectorAll(query); // Get all elements by tag name
+    const elements = document.querySelectorAll(query); // Get all elements by Query
     return Array.from(elements).find((el) => isElementVisible(el)); // Find the first visible element
 };
 
