@@ -12,6 +12,13 @@ This Extension contains some useful tools to use while Using YouTube!
     > Repeat Specific Segment of the Video. (For example, from 00:10:22 to 00:11:20. It will repeat the segments as long as you want!)
 -   ### MORE INCOMING!!!
 
+## Screenshots!
+
+![HomePage](screenshots/home.png)
+![Video Dislikes](screenshots/dislike.png)
+![Video Speed](screenshots/speed.png)
+![Repeat Segments](screenshots/segments.png)
+
 ## How to Use?
 
 -   Download the Zip File from the [Download URL](https://github.com/TheProjectsX/youtube-toolkit/releases/download/YouTubeToolkit/YouTube-Toolkit.zip) or [Release Page](https://github.com/TheProjectsX/youtube-toolkit/releases)
