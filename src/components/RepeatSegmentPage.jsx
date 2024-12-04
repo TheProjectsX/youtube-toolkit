@@ -33,6 +33,7 @@ const RepeatSegmentPage = () => {
                 tabs[0].id,
                 { action: "get-repeat-segment-initial-value" },
                 (response) => {
+                    console.log(response);
                     setRepeating(response.running);
                     setPointA(response["repeat-segment--point-a"]);
                     setPointB(response["repeat-segment--point-b"]);
@@ -65,6 +66,13 @@ const RepeatSegmentPage = () => {
     };
 
     const handleClearPoints = async () => {
+        chrome.tabs.sendMessage(
+            activeTabId,
+            { action: "repeat-segment-clear-points" },
+            (response) => {
+                console.log("Response of Clear Segment:", response);
+            }
+        );
         setPointA("");
         setPointB("");
     };

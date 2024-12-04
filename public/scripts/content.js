@@ -41,15 +41,13 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
             sendResponse({ timestamp: currentTimestamp });
         } else if (message.action === "repeat-segment-clear-points") {
             const data = {};
-            data[videoId] = {};
             data[videoId] = {
                 "repeat-segment--point-a": "",
-            };
-            data[videoId] = {
                 "repeat-segment--point-b": "",
             };
-
             chrome.storage.local.set(data);
+
+            sendResponse({ success: true });
         } else if (message.action === "start-repeat-segment") {
             clearInterval(repeatSegmentInterval);
 
