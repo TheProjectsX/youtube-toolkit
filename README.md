@@ -10,6 +10,8 @@ This Extension contains some useful tools to use while Using YouTube!
     > Customize YouTube video speed as you wish! (2x, 4x, 8x or anything you want!)
 -   ### Repeat Segment
     > Repeat Specific Segment of the Video. (For example, from 00:10:22 to 00:11:20. It will repeat the segments as long as you want!)
+-   ### Thumbnail Download
+    > Download the Thumbnail of the video in different Resolution.
 -   ### MORE INCOMING!!!
 
 ## Screenshots!
@@ -18,6 +20,7 @@ This Extension contains some useful tools to use while Using YouTube!
 ![Video Dislikes](screenshots/dislike.png)
 ![Video Speed](screenshots/speed.png)
 ![Repeat Segments](screenshots/segments.png)
+![Video Thumbnail](screenshots/thumbnail.png)
 
 ## How to Use?
 
