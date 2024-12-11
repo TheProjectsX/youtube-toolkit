@@ -3,6 +3,7 @@ import Home from "./components/Home";
 import YouTubeDislikePage from "./components/YouTubeDislikePage";
 import VideoSpeedPage from "./components/VideoSpeed";
 import RepeatSegmentPage from "./components/RepeatSegmentPage";
+import VideoThumbnail from "./components/VideoThumbnail";
 
 function App() {
     const [currentPage, setCurrentPage] = useState("home");
@@ -60,6 +61,8 @@ function App() {
                             <VideoSpeedPage />
                         ) : currentPage === "repeat-segment" ? (
                             <RepeatSegmentPage />
+                        ) : currentPage === "video-thumbnail" ? (
+                            <VideoThumbnail />
                         ) : (
                             "Nothing"
                         )}

@@ -21,6 +21,13 @@ const HomePage = ({ setCurrentPage, isYouTubeWatch }) => {
             title: "Repeat a Segment of Video",
             disabled: !isYouTubeWatch,
         },
+        {
+            name: "Video Thumbnail",
+            icon: "🖼️",
+            page: "video-thumbnail",
+            title: "Get Thumbnail of The YouTube Video",
+            disabled: !isYouTubeWatch,
+        },
     ];
 
     return (
