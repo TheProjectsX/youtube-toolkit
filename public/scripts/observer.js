@@ -1,6 +1,9 @@
 // Function to check if the current page is a YouTube video page
 function isVideoPage() {
-    return window.location.href.includes("watch?v=");
+    return (
+        window.location.href.includes("watch?v=") ||
+        window.location.href.includes("/shorts/")
+    );
 }
 
 // Utility function to notify when URL changes

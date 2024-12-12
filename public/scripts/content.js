@@ -2,13 +2,20 @@
 let videoId;
 
 window.addEventListener("youtubeVideoOpened", async (e) => {
-    if (!e.detail.url.includes("watch?v=")) {
+    const [isVideo, isShorts] = [e.detail.url.includes("watch?v="), false];
+
+    if (!isVideo && !isShorts) {
         return;
     }
     const urlObj = new URL(e.detail.url);
-    videoId = urlObj.searchParams.get("v");
 
-    updateDislikesData(videoId);
+    if (isShorts) {
+        videoId = urlObj.pathname.split("/")[2];
+    } else {
+        videoId = urlObj.searchParams.get("v");
+    }
+
+    updateDislikesData(videoId, isShorts);
 
     const videoSpeed = sessionStorage.getItem("video-speed");
 
