@@ -1,6 +1,7 @@
+// Save Video ID to use later
 let videoId;
 
-window.addEventListener("youtubeVideoOpened", (e) => {
+window.addEventListener("youtubeVideoOpened", async (e) => {
     if (!e.detail.url.includes("watch?v=")) {
         return;
     }
@@ -8,6 +9,14 @@ window.addEventListener("youtubeVideoOpened", (e) => {
     videoId = urlObj.searchParams.get("v");
 
     updateDislikesData(videoId);
+
+    const videoSpeed = sessionStorage.getItem("video-speed");
+
+    if (videoSpeed) {
+        await DOMSettled();
+        const videoElement = document.querySelector("#ytd-player video");
+        videoElement.playbackRate = parseFloat(videoSpeed);
+    }
 });
 
 // Repeat Video Segments Controls
@@ -65,12 +74,6 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
             clearInterval(repeatSegmentInterval);
             repeatSegmentInterval = null;
             sendResponse({ stopped: true });
-        } else if (message.action === "get-repeat-segment-status") {
-            if (repeatSegmentInterval) {
-                sendResponse({ running: true });
-            } else {
-                sendResponse({ running: false });
-            }
         } else if (message.action === "get-repeat-segment-initial-value") {
             const data = {};
             data["running"] = repeatSegmentInterval !== null;
@@ -83,6 +86,17 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
                 result["repeat-segment--point-b"] ?? "";
 
             sendResponse(data);
+        } else if (message.action === "save-video-speed") {
+            const speed = message.speed;
+
+            // Save Speed to Session Storage
+            sessionStorage.setItem("video-speed", speed);
+            sendResponse({ success: true });
+        } else if (message.action === "get-video-speed") {
+            const videoElement = document.querySelector("#ytd-player video");
+            const videoSpeed = videoElement.playbackRate;
+
+            sendResponse({ speed: videoSpeed });
         }
     };
 

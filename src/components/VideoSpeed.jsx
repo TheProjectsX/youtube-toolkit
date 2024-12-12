@@ -1,8 +1,19 @@
 import { useState } from "react";
 
 const VideoSpeedPage = () => {
-    const [selectedSpeed, setSelectedSpeed] = useState(null); // Default is 1x
+    const [currentSpeed, setCurrentSpeed] = useState(null);
     const predefinedSpeeds = [1, 2, 3, 5, 8, 10];
+
+    // Get Speed of Current Video
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+        chrome.tabs.sendMessage(
+            tabs[0].id,
+            { action: "get-video-speed" },
+            (response) => {
+                setCurrentSpeed(response.speed);
+            }
+        );
+    });
 
     const setVideoSpeed = async (speed) => {
         const [tab] = await chrome.tabs.query({ active: true });
@@ -16,17 +27,25 @@ const VideoSpeedPage = () => {
                 videoElement.playbackRate = speed;
             },
         });
+
+        chrome.tabs.sendMessage(
+            tab.id,
+            { action: "save-video-speed", speed },
+            (response) => {
+                console.log("Save Video Speed Response", response);
+            }
+        );
     };
 
     const handleSpeedClick = (speed) => {
-        setSelectedSpeed(speed);
+        setCurrentSpeed(speed);
         setVideoSpeed(speed);
     };
 
     const handleCustomSpeedChange = (e) => {
         e.preventDefault();
         const speed = parseFloat(e.target.speed.value);
-        setSelectedSpeed(speed);
+        setCurrentSpeed(speed);
 
         setVideoSpeed(speed);
     };
@@ -41,7 +60,7 @@ const VideoSpeedPage = () => {
                         key={speed}
                         onClick={() => handleSpeedClick(speed)}
                         className={`w-20 py-2 rounded-lg text-sm font-medium shadow-md transition-all duration-200 ${
-                            selectedSpeed === speed
+                            currentSpeed === speed
                                 ? "bg-blue-600"
                                 : "bg-gray-800 hover:bg-gray-700"
                         }`}
@@ -79,8 +98,8 @@ const VideoSpeedPage = () => {
 
             <p className="mt-6 text-lg">
                 Selected Speed:{" "}
-                {selectedSpeed ? (
-                    <span className="font-bold">{selectedSpeed}x</span>
+                {currentSpeed ? (
+                    <span className="font-bold">{currentSpeed}x</span>
                 ) : (
                     <span className="font-bold italic">None</span>
                 )}

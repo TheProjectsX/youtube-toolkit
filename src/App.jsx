@@ -74,8 +74,9 @@ function App() {
                     <h1 className="text-2xl font-bold mb-6 text-center text-white">
                         YouTube Toolkit
                     </h1>
-                    <p className="text-lg text-white text-center w-2/3 mx-auto">
-                        You are not in a YouTube video Page!
+                    <p className="text-lg text-white text-center mx-auto">
+                        You are not in{" "}
+                        <span className="font-bold">YouTube</span>!
                     </p>
                 </div>
             )}
