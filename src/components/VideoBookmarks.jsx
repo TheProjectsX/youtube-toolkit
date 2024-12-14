@@ -3,19 +3,21 @@ import { useState } from "react";
 import { secondsToHHMMSS } from "../utils/utils";
 
 const VideoBookmarks = () => {
-    const [bookmarks, setBookmarks] = useState([]);
+    const [bookmarks, setBookmarks] = useState(null);
 
     // Get Bookmarks of Current Video
-    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-        chrome.tabs.sendMessage(
-            tabs[0].id,
-            { action: "get-video-bookmarks" },
-            (response) => {
-                console.log(response);
-                setBookmarks(response.bookmarks ?? []);
-            }
-        );
-    });
+    if (!bookmarks) {
+        chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+            chrome.tabs.sendMessage(
+                tabs[0].id,
+                { action: "get-video-bookmarks" },
+                (response) => {
+                    console.log(response);
+                    setBookmarks(response.bookmarks ?? []);
+                }
+            );
+        });
+    }
 
     const saveBookmark = () => {
         chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
@@ -24,7 +26,7 @@ const VideoBookmarks = () => {
                 { action: "add-video-bookmark" },
                 (response) => {
                     console.log("Add Bookmarks Response", response);
-                    setBookmarks([...bookmarks, response.time]);
+                    setBookmarks([...(bookmarks ?? []), response.time]);
                 }
             );
         });
@@ -44,25 +46,25 @@ const VideoBookmarks = () => {
         });
     };
 
-    const handleRemoveBookmark = (time) => {
-        chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-            chrome.tabs.sendMessage(
-                tabs[0].id,
-                { action: "remove-video-bookmark", time },
-                (response) => {
-                    setBookmarks("Remove Bookmarks Response", response);
-                }
-            );
-        });
+    const handleRemoveBookmark = async (time) => {
+        const [tab] = await chrome.tabs.query({ active: true });
+        console.log(time, tab.id);
 
-        setBookmarks((prev) => prev.filter((item) => item !== time));
+        chrome.tabs.sendMessage(
+            tab.id,
+            { action: "remove-video-bookmark", time },
+            (response) => {
+                console.log("Remove Bookmarks Response", response);
+                setBookmarks((prev) => prev.filter((item) => item !== time));
+            }
+        );
     };
 
     return (
         <div className="bg-gray-900 w-full flex flex-col items-center justify-center text-white p-4">
             <h1 className="text-2xl font-bold mb-6">Video Bookmarks</h1>
 
-            {bookmarks.length > 0 ? (
+            {bookmarks && bookmarks.length > 0 ? (
                 <div className="h-44 overflow-auto space-y-2 w-48">
                     {bookmarks.map((second, idx) => (
                         <div

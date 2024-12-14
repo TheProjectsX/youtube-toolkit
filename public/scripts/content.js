@@ -105,17 +105,23 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 
             sendResponse({ speed: videoSpeed });
         } else if (message.action === "add-video-bookmark") {
-            const time = message.time;
-            const videoData = (await getStorageData([videoId]))[videoId] ?? {};
+            const videoElement = document.querySelector("#ytd-player video");
+            const time = videoElement.currentTime;
+
+            let videoData;
+            try {
+                videoData = (await getStorageData([videoId]))[videoId] ?? {};
+            } catch (error) {
+                videoData = {};
+            }
             const oldBookmarks = videoData.bookmarks ?? [];
             oldBookmarks.push(time);
             videoData["bookmarks"] = oldBookmarks;
             const data = {};
             data[videoId] = videoData;
 
-            console.log(data);
             await chrome.storage.local.set(data);
-            console.log({ success: true, time: time });
+
             sendResponse({ success: true, time: time });
         } else if (message.action === "get-video-bookmarks") {
             const videoData = (await getStorageData([videoId]))[videoId] ?? {};
@@ -126,13 +132,17 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
             sendResponse({ bookmarks });
         } else if (message.action === "remove-video-bookmarks") {
             const time = message.time;
+            console.log(time);
             const videoData = (await getStorageData([videoId]))[videoId] ?? {};
+            console.log(videoData);
             const oldBookmarks = videoData.bookmarks ?? [];
 
             const newBookmarks = oldBookmarks.filter((item) => item !== time);
+            console.log(newBookmarks);
             videoData["bookmarks"] = newBookmarks;
             const data = {};
             data[videoId] = videoData;
+            console.log(data);
 
             await chrome.storage.local.set(data);
             sendResponse({ success: true });
