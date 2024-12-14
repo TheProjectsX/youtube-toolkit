@@ -37,18 +37,18 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
             const currentTimestamp = videoElement.currentTime;
             const data = {};
 
-            const oldData = (await getStorageData([videoId]))[videoId] ?? {};
+            const videoData = (await getStorageData([videoId]))[videoId] ?? {};
 
             if (message.point === "a") {
                 data[videoId] = {
                     "repeat-segment--point-a": currentTimestamp,
                     "repeat-segment--point-b":
-                        oldData["repeat-segment--point-b"] ?? "",
+                        videoData["repeat-segment--point-b"] ?? "",
                 };
             } else if (message.point === "b") {
                 data[videoId] = {
                     "repeat-segment--point-a":
-                        oldData["repeat-segment--point-a"] ?? "",
+                        videoData["repeat-segment--point-a"] ?? "",
                     "repeat-segment--point-b": currentTimestamp,
                 };
             }
@@ -104,6 +104,38 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
             const videoSpeed = videoElement.playbackRate;
 
             sendResponse({ speed: videoSpeed });
+        } else if (message.action === "add-video-bookmark") {
+            const time = message.time;
+            const videoData = (await getStorageData([videoId]))[videoId] ?? {};
+            const oldBookmarks = videoData.bookmarks ?? [];
+            oldBookmarks.push(time);
+            videoData["bookmarks"] = oldBookmarks;
+            const data = {};
+            data[videoId] = videoData;
+
+            console.log(data);
+            await chrome.storage.local.set(data);
+            console.log({ success: true, time: time });
+            sendResponse({ success: true, time: time });
+        } else if (message.action === "get-video-bookmarks") {
+            const videoData = (await getStorageData([videoId]))[videoId] ?? {};
+            console.log(videoData);
+            const bookmarks = videoData.bookmarks ?? [];
+
+            console.log(bookmarks);
+            sendResponse({ bookmarks });
+        } else if (message.action === "remove-video-bookmarks") {
+            const time = message.time;
+            const videoData = (await getStorageData([videoId]))[videoId] ?? {};
+            const oldBookmarks = videoData.bookmarks ?? [];
+
+            const newBookmarks = oldBookmarks.filter((item) => item !== time);
+            videoData["bookmarks"] = newBookmarks;
+            const data = {};
+            data[videoId] = videoData;
+
+            await chrome.storage.local.set(data);
+            sendResponse({ success: true });
         }
     };
 

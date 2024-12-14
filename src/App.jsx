@@ -4,6 +4,7 @@ import YouTubeDislikePage from "./components/YouTubeDislikePage";
 import VideoSpeedPage from "./components/VideoSpeed";
 import RepeatSegmentPage from "./components/RepeatSegmentPage";
 import VideoThumbnail from "./components/VideoThumbnail";
+import VideoBookmarks from "./components/VideoBookmarks";
 
 function App() {
     const [currentPage, setCurrentPage] = useState("home");
@@ -22,7 +23,7 @@ function App() {
     }, []);
 
     return (
-        <main className="w-80 py-6 min-h-96 bg-gray-900 flex flex-col items-center justify-center">
+        <main className="w-80 py-6 h-[476px] bg-gray-900 flex flex-col items-center justify-center">
             {isYouTube ? (
                 <>
                     {currentPage !== "home" && (
@@ -63,6 +64,8 @@ function App() {
                             <RepeatSegmentPage />
                         ) : currentPage === "video-thumbnail" ? (
                             <VideoThumbnail />
+                        ) : currentPage === "video-bookmarks" ? (
+                            <VideoBookmarks />
                         ) : (
                             "Nothing"
                         )}

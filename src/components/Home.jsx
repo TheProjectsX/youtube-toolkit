@@ -28,6 +28,13 @@ const HomePage = ({ setCurrentPage, isYouTubeWatch }) => {
             title: "Get Thumbnail of The YouTube Video",
             disabled: !isYouTubeWatch,
         },
+        {
+            name: "Bookmarks",
+            icon: "🔖",
+            page: "video-bookmarks",
+            title: "Save your Video Bookmarks",
+            disabled: !isYouTubeWatch,
+        },
     ];
 
     return (
