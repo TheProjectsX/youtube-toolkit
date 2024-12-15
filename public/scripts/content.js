@@ -124,25 +124,27 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 
             sendResponse({ success: true, time: time });
         } else if (message.action === "get-video-bookmarks") {
-            const videoData = (await getStorageData([videoId]))[videoId] ?? {};
-            console.log(videoData);
+            let videoData;
+            try {
+                videoData = (await getStorageData([videoId]))[videoId] ?? {};
+            } catch (error) {
+                videoData = {};
+            }
+            // console.log(videoData);
             const bookmarks = videoData.bookmarks ?? [];
 
-            console.log(bookmarks);
+            // console.log(bookmarks);
             sendResponse({ bookmarks });
-        } else if (message.action === "remove-video-bookmarks") {
+        } else if (message.action === "remove-video-bookmark") {
             const time = message.time;
-            console.log(time);
             const videoData = (await getStorageData([videoId]))[videoId] ?? {};
-            console.log(videoData);
             const oldBookmarks = videoData.bookmarks ?? [];
 
             const newBookmarks = oldBookmarks.filter((item) => item !== time);
-            console.log(newBookmarks);
+
             videoData["bookmarks"] = newBookmarks;
             const data = {};
             data[videoId] = videoData;
-            console.log(data);
 
             await chrome.storage.local.set(data);
             sendResponse({ success: true });

@@ -12,7 +12,6 @@ const VideoBookmarks = () => {
                 tabs[0].id,
                 { action: "get-video-bookmarks" },
                 (response) => {
-                    console.log(response);
                     setBookmarks(response.bookmarks ?? []);
                 }
             );
@@ -47,17 +46,18 @@ const VideoBookmarks = () => {
     };
 
     const handleRemoveBookmark = async (time) => {
-        const [tab] = await chrome.tabs.query({ active: true });
-        console.log(time, tab.id);
-
-        chrome.tabs.sendMessage(
-            tab.id,
-            { action: "remove-video-bookmark", time },
-            (response) => {
-                console.log("Remove Bookmarks Response", response);
-                setBookmarks((prev) => prev.filter((item) => item !== time));
-            }
-        );
+        chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+            chrome.tabs.sendMessage(
+                tabs[0].id,
+                { action: "remove-video-bookmark", time },
+                (response) => {
+                    console.log("Remove Bookmarks Response", response);
+                    setBookmarks((prev) =>
+                        prev.filter((item) => item !== time)
+                    );
+                }
+            );
+        });
     };
 
     return (
