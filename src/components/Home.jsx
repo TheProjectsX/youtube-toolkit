@@ -35,13 +35,27 @@ const HomePage = ({ setCurrentPage, isYouTubeWatch }) => {
             title: "Save your Video Bookmarks",
             disabled: !isYouTubeWatch,
         },
+        {
+            name: "Bookmarks",
+            icon: "🔖",
+            page: "video-bookmarks",
+            title: "Save your Video Bookmarks",
+            disabled: !isYouTubeWatch,
+        },
+        {
+            name: "Bookmarks",
+            icon: "🔖",
+            page: "video-bookmarks",
+            title: "Save your Video Bookmarks",
+            disabled: !isYouTubeWatch,
+        },
     ];
 
     return (
         <div className="w-full bg-gray-900 flex flex-col items-center justify-center text-white p-4">
             <h1 className="text-2xl font-bold mb-6">YouTube Toolkit</h1>
 
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 h-[360px] overflow-auto scrollbar-thin">
                 {features.map((feature, index) => (
                     <button
                         key={index}
