@@ -25,7 +25,9 @@ const VideoBookmarks = () => {
                 { action: "add-video-bookmark" },
                 (response) => {
                     console.log("Add Bookmarks Response", response);
-                    setBookmarks([...(bookmarks ?? []), response.time]);
+                    if (!bookmarks.includes(response.time)) {
+                        setBookmarks([...(bookmarks ?? []), response.time]);
+                    }
                 }
             );
         });

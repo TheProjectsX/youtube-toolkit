@@ -16,7 +16,10 @@ const VideoSpeedPage = () => {
     });
 
     const setVideoSpeed = async (speed) => {
-        const [tab] = await chrome.tabs.query({ active: true });
+        const [tab] = await chrome.tabs.query({
+            active: true,
+            currentWindow: true,
+        });
 
         chrome.scripting.executeScript({
             target: { tabId: tab.id },

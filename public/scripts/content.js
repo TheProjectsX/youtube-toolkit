@@ -1,12 +1,10 @@
 // Get Storage data of Key
 const getStorageData = async (key) => {
-    let data;
+    let data = {};
     try {
         data = await chrome.storage.local.get([key]);
-        data = data[key];
-    } catch (error) {
-        data = {};
-    }
+        data = data[key] ?? {};
+    } catch (error) {}
 
     return data;
 };
@@ -123,7 +121,10 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
             const videoData = await getStorageData(videoId);
 
             const oldBookmarks = videoData.bookmarks ?? [];
-            oldBookmarks.push(time);
+            if (!oldBookmarks.includes(time)) {
+                oldBookmarks.push(time);
+            }
+
             videoData["bookmarks"] = oldBookmarks;
             const data = {};
             data[videoId] = videoData;
@@ -135,7 +136,6 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
             const videoData = await getStorageData(videoId);
             const bookmarks = videoData.bookmarks ?? [];
 
-            // console.log(bookmarks);
             sendResponse({ bookmarks });
         } else if (message.action === "remove-video-bookmark") {
             const time = message.time;
