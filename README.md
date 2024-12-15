@@ -12,6 +12,8 @@ This Extension contains some useful tools to use while Using YouTube!
     > Repeat Specific Segment of the Video. (For example, from 00:10:22 to 00:11:20. It will repeat the segments as long as you want!)
 -   ### Thumbnail Download
     > Download the Thumbnail of the video in different Resolution.
+-   ### Video Bookmarks
+    > Save your Video's specific times as Bookmarks!
 -   ### MORE INCOMING!!!
 
 ## Screenshots!
@@ -21,6 +23,7 @@ This Extension contains some useful tools to use while Using YouTube!
 ![Video Speed](screenshots/speed.png)
 ![Repeat Segments](screenshots/segments.png)
 ![Video Thumbnail](screenshots/thumbnail.png)
+![Video Bookmarks](screenshots/bookmarks.png)
 
 ## How to Use?
 
