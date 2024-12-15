@@ -1,18 +1,5 @@
 let textNodeClone;
 
-// Get Chrome Storage Data
-const getStorageData = (keys, context = chrome) => {
-    return new Promise((resolve, reject) => {
-        context.storage.local.get(keys, (result) => {
-            if (context.runtime.lastError) {
-                reject(context.runtime.lastError);
-            } else {
-                resolve(result);
-            }
-        });
-    });
-};
-
 // Set Dislike value in the UI
 const setDislikeValue = async (value = "0", shorts = false) => {
     if (shorts) {
@@ -151,8 +138,12 @@ const observeShortsDislikeElementChange = (value) => {
 
 // Main function to Update Dislikes
 const updateDislikesData = async (videoId, shorts = false) => {
-    // console.log(videoId);
-    const result = await getStorageData(["turnOnYTDislike"]);
+    let result;
+    try {
+        result = await chrome.storage.local.get(["turnOnYTDislike"]);
+    } catch (error) {
+        result = {};
+    }
     if (!result.turnOnYTDislike) {
         return;
     }

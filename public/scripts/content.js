@@ -1,3 +1,16 @@
+// Get Storage data of Key
+const getStorageData = async (key) => {
+    let data;
+    try {
+        data = await chrome.storage.local.get([key]);
+        data = data[key];
+    } catch (error) {
+        data = {};
+    }
+
+    return data;
+};
+
 // Save Video ID to use later
 let videoId;
 
@@ -37,7 +50,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
             const currentTimestamp = videoElement.currentTime;
             const data = {};
 
-            const videoData = (await getStorageData([videoId]))[videoId] ?? {};
+            const videoData = await getStorageData(videoId);
 
             if (message.point === "a") {
                 data[videoId] = {
@@ -85,8 +98,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
             const data = {};
             data["running"] = repeatSegmentInterval !== null;
 
-            const result =
-                (await getStorageData([videoId], chrome))[videoId] ?? {};
+            const result = await getStorageData(videoId);
             data["repeat-segment--point-a"] =
                 result["repeat-segment--point-a"] ?? "";
             data["repeat-segment--point-b"] =
@@ -108,12 +120,8 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
             const videoElement = document.querySelector("#ytd-player video");
             const time = videoElement.currentTime;
 
-            let videoData;
-            try {
-                videoData = (await getStorageData([videoId]))[videoId] ?? {};
-            } catch (error) {
-                videoData = {};
-            }
+            const videoData = await getStorageData(videoId);
+
             const oldBookmarks = videoData.bookmarks ?? [];
             oldBookmarks.push(time);
             videoData["bookmarks"] = oldBookmarks;
@@ -124,20 +132,14 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 
             sendResponse({ success: true, time: time });
         } else if (message.action === "get-video-bookmarks") {
-            let videoData;
-            try {
-                videoData = (await getStorageData([videoId]))[videoId] ?? {};
-            } catch (error) {
-                videoData = {};
-            }
-            // console.log(videoData);
+            const videoData = await getStorageData(videoId);
             const bookmarks = videoData.bookmarks ?? [];
 
             // console.log(bookmarks);
             sendResponse({ bookmarks });
         } else if (message.action === "remove-video-bookmark") {
             const time = message.time;
-            const videoData = (await getStorageData([videoId]))[videoId] ?? {};
+            const videoData = await getStorageData(videoId);
             const oldBookmarks = videoData.bookmarks ?? [];
 
             const newBookmarks = oldBookmarks.filter((item) => item !== time);
