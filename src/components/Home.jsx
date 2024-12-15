@@ -35,20 +35,6 @@ const HomePage = ({ setCurrentPage, isYouTubeWatch }) => {
             title: "Save your Video Bookmarks",
             disabled: !isYouTubeWatch,
         },
-        {
-            name: "Bookmarks",
-            icon: "🔖",
-            page: "video-bookmarks",
-            title: "Save your Video Bookmarks",
-            disabled: !isYouTubeWatch,
-        },
-        {
-            name: "Bookmarks",
-            icon: "🔖",
-            page: "video-bookmarks",
-            title: "Save your Video Bookmarks",
-            disabled: !isYouTubeWatch,
-        },
     ];
 
     return (
