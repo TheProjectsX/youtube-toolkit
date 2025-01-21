@@ -57,21 +57,14 @@ const observeVideoDislikeElementChange = () => {
         // Disconnect the observer to prevent recursive triggering
         observer.disconnect();
 
-        if (shorts) {
-            disLikeButton.innerText = value;
-            console.log("Value of SHORTs DISLIKE changed");
-        } else {
-            // Safely modify the DOM
-            if (!disLikeButton.contains(textNodeClone)) {
-                disLikeButton.insertBefore(textNodeClone, null);
-            }
-            disLikeButton.classList.remove(
-                "yt-spec-button-shape-next--icon-button"
-            );
-            disLikeButton.classList.add(
-                "yt-spec-button-shape-next--icon-leading"
-            );
+        // Safely modify the DOM
+        if (!disLikeButton.contains(textNodeClone)) {
+            disLikeButton.insertBefore(textNodeClone, null);
         }
+        disLikeButton.classList.remove(
+            "yt-spec-button-shape-next--icon-button"
+        );
+        disLikeButton.classList.add("yt-spec-button-shape-next--icon-leading");
 
         // Reconnect the observer after modifications
         observer.observe(disLikeButton, { childList: true, subtree: false });

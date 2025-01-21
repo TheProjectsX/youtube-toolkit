@@ -2,7 +2,7 @@ import { useState } from "react";
 
 import { secondsToHHMMSS } from "../utils/utils";
 
-const VideoBookmarks = () => {
+const VideoBookmarksPage = () => {
     const [bookmarks, setBookmarks] = useState(null);
 
     // Get Bookmarks of Current Video
@@ -109,4 +109,4 @@ const VideoBookmarks = () => {
     );
 };
 
-export default VideoBookmarks;
+export default VideoBookmarksPage;

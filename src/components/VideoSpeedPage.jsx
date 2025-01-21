@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-const VideoSpeedPage = () => {
+const VideoSpeedPage = ({ isYouTubeVideoStatus }) => {
     const [currentSpeed, setCurrentSpeed] = useState(null);
     const predefinedSpeeds = [1, 2, 3, 5, 8, 10];
 
@@ -8,7 +8,7 @@ const VideoSpeedPage = () => {
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
         chrome.tabs.sendMessage(
             tabs[0].id,
-            { action: "get-video-speed" },
+            { action: "get-video-speed", shorts: isYouTubeVideoStatus[1] },
             (response) => {
                 setCurrentSpeed(response.speed);
             }
@@ -23,11 +23,17 @@ const VideoSpeedPage = () => {
 
         chrome.scripting.executeScript({
             target: { tabId: tab.id },
-            args: [speed],
-            func: (speed) => {
-                const videoElement =
-                    document.querySelector("#ytd-player video");
-                videoElement.playbackRate = speed;
+            args: [speed, isYouTubeVideoStatus[1]],
+            func: (speed, shorts) => {
+                if (!shorts) {
+                    const videoElement =
+                        document.querySelector("#ytd-player video");
+                    videoElement.playbackRate = speed;
+                } else {
+                    document
+                        .querySelectorAll("ytd-player video")
+                        .forEach((elm) => (elm.playbackRate = speed));
+                }
             },
         });
 

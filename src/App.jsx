@@ -1,15 +1,18 @@
 import { useEffect, useState } from "react";
 import Home from "./components/Home";
 import YouTubeDislikePage from "./components/YouTubeDislikePage";
-import VideoSpeedPage from "./components/VideoSpeed";
+import VideoSpeedPage from "./components/VideoSpeedPage";
 import RepeatSegmentPage from "./components/RepeatSegmentPage";
-import VideoThumbnail from "./components/VideoThumbnail";
-import VideoBookmarks from "./components/VideoBookmarks";
+import VideoThumbnailPage from "./components/VideoThumbnailPage";
+import VideoBookmarksPage from "./components/VideoBookmarksPage";
 
 function App() {
     const [currentPage, setCurrentPage] = useState("home");
     const [isYouTube, setIsYouTube] = useState(true);
-    const [isYouTubeWatch, setIsYouTubeWatch] = useState(true);
+    const [isYouTubeVideoStatus, setIsYouTubeVideoStatus] = useState([
+        true,
+        false,
+    ]); // YouTube Video, YouTube Shorts
 
     useEffect(() => {
         // Query the active tab's URL
@@ -17,7 +20,10 @@ function App() {
             if (tabs.length > 0) {
                 const url = tabs[0].url || "";
                 setIsYouTube(url.includes("youtube.com"));
-                setIsYouTubeWatch(url.includes("youtube.com/watch"));
+                setIsYouTubeVideoStatus([
+                    url.includes("youtube.com/watch"),
+                    url.includes("youtube.com/shorts/"),
+                ]);
             }
         });
     }, []);
@@ -54,18 +60,20 @@ function App() {
                         {currentPage === "home" ? (
                             <Home
                                 setCurrentPage={setCurrentPage}
-                                isYouTubeWatch={isYouTubeWatch}
+                                isYouTubeVideoStatus={isYouTubeVideoStatus}
                             />
                         ) : currentPage === "youtube-dislike" ? (
                             <YouTubeDislikePage />
                         ) : currentPage === "video-speed" ? (
-                            <VideoSpeedPage />
+                            <VideoSpeedPage
+                                isYouTubeVideoStatus={isYouTubeVideoStatus}
+                            />
                         ) : currentPage === "repeat-segment" ? (
                             <RepeatSegmentPage />
                         ) : currentPage === "video-thumbnail" ? (
-                            <VideoThumbnail />
+                            <VideoThumbnailPage />
                         ) : currentPage === "video-bookmarks" ? (
-                            <VideoBookmarks />
+                            <VideoBookmarksPage />
                         ) : (
                             "Nothing"
                         )}

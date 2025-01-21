@@ -1,4 +1,4 @@
-const HomePage = ({ setCurrentPage, isYouTubeWatch }) => {
+const HomePage = ({ setCurrentPage, isYouTubeVideoStatus }) => {
     const features = [
         {
             name: "YouTube Dislike",
@@ -12,28 +12,28 @@ const HomePage = ({ setCurrentPage, isYouTubeWatch }) => {
             icon: "⏩",
             page: "video-speed",
             title: "Customize YouTube Video Speed",
-            disabled: !isYouTubeWatch,
+            disabled: !isYouTubeVideoStatus[0] && !isYouTubeVideoStatus[1],
         },
         {
             name: "Repeat Segment",
             icon: "🔄",
             page: "repeat-segment",
             title: "Repeat a Segment of Video",
-            disabled: !isYouTubeWatch,
+            disabled: !isYouTubeVideoStatus[0],
         },
         {
             name: "Video Thumbnail",
             icon: "🖼️",
             page: "video-thumbnail",
             title: "Get Thumbnail of The YouTube Video",
-            disabled: !isYouTubeWatch,
+            disabled: !isYouTubeVideoStatus[0],
         },
         {
             name: "Bookmarks",
             icon: "🔖",
             page: "video-bookmarks",
             title: "Save your Video Bookmarks",
-            disabled: !isYouTubeWatch,
+            disabled: !isYouTubeVideoStatus[0],
         },
     ];
 

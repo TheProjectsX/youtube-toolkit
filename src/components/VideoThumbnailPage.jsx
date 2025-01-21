@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-const VideoThumbnail = () => {
+const VideoThumbnailPage = () => {
     const [videoData, setVideoData] = useState({});
 
     function sanitizeFileName(title) {
@@ -119,4 +119,4 @@ const VideoThumbnail = () => {
     );
 };
 
-export default VideoThumbnail;
+export default VideoThumbnailPage;
