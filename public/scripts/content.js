@@ -13,7 +13,10 @@ const getStorageData = async (key) => {
 let videoId;
 
 window.addEventListener("youtubeVideoOpened", async (e) => {
-    const [isVideo, isShorts] = [e.detail.url.includes("watch?v="), false];
+    const [isVideo, isShorts] = [
+        e.detail.url.includes("watch?v="),
+        e.detail.url.includes("shorts/"),
+    ];
 
     if (!isVideo && !isShorts) {
         return;
@@ -26,14 +29,18 @@ window.addEventListener("youtubeVideoOpened", async (e) => {
         videoId = urlObj.searchParams.get("v");
     }
 
-    updateDislikesData(videoId, isShorts);
+    if (!isShorts) {
+        updateDislikesData(videoId, isShorts);
+    }
 
     const videoSpeed = sessionStorage.getItem("video-speed");
 
     if (videoSpeed) {
         await DOMSettled();
-        const videoElement = document.querySelector("#ytd-player video");
-        videoElement.playbackRate = parseFloat(videoSpeed);
+        document
+            .querySelectorAll("ytd-player video")
+            .forEach((elm) => (elm.playbackRate = parseFloat(videoSpeed)));
+        // videoElement.playbackRate = parseFloat(videoSpeed);
     }
 });
 
@@ -110,8 +117,18 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
             sessionStorage.setItem("video-speed", speed);
             sendResponse({ success: true });
         } else if (message.action === "get-video-speed") {
-            const videoElement = document.querySelector("#ytd-player video");
-            const videoSpeed = videoElement.playbackRate;
+            let videoSpeed;
+            if (!message.isShorts) {
+                const videoElement =
+                    document.querySelector("#ytd-player video");
+                videoSpeed = videoElement.playbackRate;
+            } else {
+                document.querySelectorAll("ytd-player video").forEach((elm) => {
+                    if (!(elm.playbackRate < videoSpeed)) {
+                        videoSpeed = elm.playbackRate;
+                    }
+                });
+            }
 
             sendResponse({ speed: videoSpeed });
         } else if (message.action === "add-video-bookmark") {

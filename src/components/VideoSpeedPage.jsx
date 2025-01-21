@@ -8,7 +8,7 @@ const VideoSpeedPage = ({ isYouTubeVideoStatus }) => {
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
         chrome.tabs.sendMessage(
             tabs[0].id,
-            { action: "get-video-speed", shorts: isYouTubeVideoStatus[1] },
+            { action: "get-video-speed", isShorts: isYouTubeVideoStatus[1] },
             (response) => {
                 setCurrentSpeed(response.speed);
             }
