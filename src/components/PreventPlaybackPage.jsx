@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const PreventPlaybackPage = () => {
     const [preventPlaybackDetails, setPreventPlaybackDetails] = useState({
@@ -7,16 +7,22 @@ const PreventPlaybackPage = () => {
         threshold: 2,
     });
 
-    chrome.storage.local.get(
-        ["turnOnPreventPlayback", "preventPlaybackThreshold"],
-        (result) => {
-            setPreventPlaybackDetails({
-                isEnabled: result.turnOnPreventPlayback ?? false,
-                limit: result.preventPlaybackLimit ?? 5,
-                threshold: result.preventPlaybackThreshold ?? 2,
-            });
-        }
-    );
+    useEffect(() => {
+        chrome.storage.local.get(
+            [
+                "turnOnPreventPlayback",
+                "preventPlaybackLimit",
+                "preventPlaybackThreshold",
+            ],
+            (result) => {
+                setPreventPlaybackDetails({
+                    isEnabled: result.turnOnPreventPlayback ?? false,
+                    limit: result.preventPlaybackLimit ?? 5,
+                    threshold: result.preventPlaybackThreshold ?? 2,
+                });
+            }
+        );
+    }, []);
 
     const handleToggle = async () => {
         const newStatus = !preventPlaybackDetails.isEnabled;
@@ -28,8 +34,6 @@ const PreventPlaybackPage = () => {
 
         await chrome.storage.local.set({
             turnOnPreventPlayback: newStatus,
-            preventPlaybackLimit: 5,
-            preventPlaybackThreshold: 2,
         });
     };
 
@@ -41,10 +45,10 @@ const PreventPlaybackPage = () => {
             </p>
 
             <form
-                onSubmit={(e) => {
+                onSubmit={async (e) => {
                     e.preventDefault();
-                    chrome.storage.local.set({
-                        preventPlaybackLimit: preventPlaybackDetails.limit,
+                    await chrome.storage.local.set({
+                        preventPlaybackLimit: Number(e.target.limit.value),
                     });
                 }}
                 className="flex items-center gap-2 mb-3"
@@ -60,7 +64,7 @@ const PreventPlaybackPage = () => {
                         onChange={(e) =>
                             setPreventPlaybackDetails({
                                 ...preventPlaybackDetails,
-                                limit: e.target.value,
+                                limit: Number(e.target.value),
                             })
                         }
                         placeholder="Limit"
@@ -75,12 +79,14 @@ const PreventPlaybackPage = () => {
                     Apply
                 </button>
             </form>
+
             <form
-                onSubmit={(e) => {
+                onSubmit={async (e) => {
                     e.preventDefault();
-                    chrome.storage.local.set({
-                        preventPlaybackThreshold:
-                            preventPlaybackDetails.threshold,
+                    await chrome.storage.local.set({
+                        preventPlaybackThreshold: Number(
+                            e.target.threshold.value
+                        ),
                     });
                 }}
                 className="flex items-center gap-2 mb-4"
@@ -91,14 +97,14 @@ const PreventPlaybackPage = () => {
                         type="number"
                         name="threshold"
                         step="1"
-                        min={1}
                         value={preventPlaybackDetails.threshold}
                         onChange={(e) =>
                             setPreventPlaybackDetails({
                                 ...preventPlaybackDetails,
-                                threshold: e.target.value,
+                                threshold: Number(e.target.value),
                             })
                         }
+                        min={1}
                         placeholder="Threshold"
                         className="w-24 px-2 py-2 rounded-lg bg-gray-800 text-white text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-600"
                         required
