@@ -40,7 +40,7 @@ const HomePage = ({ setCurrentPage, isYouTubeVideoStatus }) => {
             icon: "⏭️",
             page: "prevent-playback",
             title: "Prevent from Matching playback videos",
-            disabled: !isYouTubeVideoStatus[0],
+            disabled: false,
         },
         {
             name: "Max Duration",

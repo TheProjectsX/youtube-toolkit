@@ -14,6 +14,10 @@ This Extension contains some useful tools to use while Using YouTube!
     > Download the Thumbnail of the video in different Resolution.
 -   ### Video Bookmarks
     > Save your Video's specific times as Bookmarks!
+-   ### Prevent Playback
+    > Prevent YouTube from Playing same type of Videos. Uses Video Titles to check same type of videos. You can use Threshold and Limit to Customize the Changes.
+-   ### Max Duration
+    > Only play Videos with a Maximum Duration. Useful when playing Musics.
 -   ### MORE INCOMING!!!
 
 ## Screenshots!
@@ -24,6 +28,8 @@ This Extension contains some useful tools to use while Using YouTube!
 ![Repeat Segments](screenshots/segments.png)
 ![Video Thumbnail](screenshots/thumbnail.png)
 ![Video Bookmarks](screenshots/bookmarks.png)
+![Video Thumbnail](screenshots/playback.png)
+![Video Bookmarks](screenshots/maxduration.png)
 
 ## How to Use?
 
