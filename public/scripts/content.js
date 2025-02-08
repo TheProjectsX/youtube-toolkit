@@ -31,6 +31,7 @@ window.addEventListener("youtubeVideoOpened", async (e) => {
 
     if (!isShorts) {
         updateDislikesData(videoId, isShorts);
+        checkPreventPlayback(e.detail.title);
     }
 
     const videoSpeed = sessionStorage.getItem("video-speed");
@@ -40,7 +41,6 @@ window.addEventListener("youtubeVideoOpened", async (e) => {
         document
             .querySelectorAll("ytd-player video")
             .forEach((elm) => (elm.playbackRate = parseFloat(videoSpeed)));
-        // videoElement.playbackRate = parseFloat(videoSpeed);
     }
 });
 

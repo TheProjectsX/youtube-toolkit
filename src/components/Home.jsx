@@ -35,6 +35,20 @@ const HomePage = ({ setCurrentPage, isYouTubeVideoStatus }) => {
             title: "Save your Video Bookmarks",
             disabled: !isYouTubeVideoStatus[0],
         },
+        {
+            name: "Prevent Replay",
+            icon: "⏭️",
+            page: "prevent-playback",
+            title: "Prevent from Matching playback videos",
+            disabled: !isYouTubeVideoStatus[0],
+        },
+        {
+            name: "Max Duration",
+            icon: "⏳",
+            page: "max-duration",
+            title: "Skips videos longer than a certain duration",
+            disabled: false,
+        },
     ];
 
     return (

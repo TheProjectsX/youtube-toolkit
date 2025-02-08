@@ -167,3 +167,72 @@ const updateDislikesData = async (videoId, shorts = false) => {
         console.log("Error:", error);
     }
 };
+
+// Check if two words are back-to-back in a string
+const checkWordsBackToBack = (arr1, str2, threshold = 2) => {
+    const words2 = str2.split(/\s+/); // Split str2 into words
+
+    for (const str1 of arr1) {
+        for (let i = 0; i <= words2.length - threshold; i++) {
+            const pair2 = words2.slice(i, i + threshold).join(" "); // Get consecutive words based on threshold
+            if (str1.includes(pair2)) {
+                return true;
+            }
+        }
+    }
+
+    return false; // No matching pair found in any item of arr1
+};
+
+// Prevent Playback and Stuff!
+const checkPreventPlayback = async () => {
+    const turnOnPreventPlayback =
+        (await getStorageData("turnOnPreventPlayback")) ?? false;
+    const preventPlaybackLimit =
+        (await getStorageData("preventPlaybackThreshold")) ?? 5;
+    const preventPlaybackThreshold =
+        (await getStorageData("preventPlaybackThreshold")) ?? 2;
+
+    if (!turnOnPreventPlayback) {
+        return;
+    }
+
+    await DOMSettled(300);
+    const pastVideoTitles =
+        JSON.parse(sessionStorage.getItem("pastVideoTitles")) ?? [];
+
+    const videoTitle = document
+        .querySelector("#title yt-formatted-string.ytd-watch-metadata")
+        .textContent.toLowerCase()
+        .trim();
+
+    if (pastVideoTitles[pastVideoTitles.length - 1] === videoTitle) return;
+
+    if (
+        checkWordsBackToBack(
+            pastVideoTitles.slice(0, preventPlaybackLimit),
+            videoTitle,
+            preventPlaybackThreshold
+        )
+    ) {
+        const nextVideoButton = document.querySelector(
+            "#ytd-player .ytp-next-button"
+        );
+        console.log("Next Video Button:", nextVideoButton);
+        if (nextVideoButton) {
+            console.log("Preventing Playback...");
+            nextVideoButton.click();
+        }
+    } else {
+        pastVideoTitles.push(videoTitle);
+        console.log("Updated Video Titles:", pastVideoTitles);
+
+        if (pastVideoTitles.length > preventPlaybackLimit) {
+            pastVideoTitles.shift();
+        }
+        sessionStorage.setItem(
+            "pastVideoTitles",
+            JSON.stringify(pastVideoTitles)
+        ); // Save to Session Storage
+    }
+};

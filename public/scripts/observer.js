@@ -9,7 +9,7 @@ function isVideoPage() {
 // Utility function to notify when URL changes
 function notifyUrlChange() {
     const event = new CustomEvent("youtubeVideoOpened", {
-        detail: { url: window.location.href },
+        detail: { url: window.location.href, title: document.title },
     });
     window.dispatchEvent(event);
 }

@@ -5,6 +5,8 @@ import VideoSpeedPage from "./components/VideoSpeedPage";
 import RepeatSegmentPage from "./components/RepeatSegmentPage";
 import VideoThumbnailPage from "./components/VideoThumbnailPage";
 import VideoBookmarksPage from "./components/VideoBookmarksPage";
+import PreventPlaybackPage from "./components/PreventPlaybackPage";
+import MaxVideoDuration from "./components/MaxVideoDuration";
 
 function App() {
     const [currentPage, setCurrentPage] = useState("home");
@@ -74,6 +76,10 @@ function App() {
                             <VideoThumbnailPage />
                         ) : currentPage === "video-bookmarks" ? (
                             <VideoBookmarksPage />
+                        ) : currentPage === "prevent-playback" ? (
+                            <PreventPlaybackPage />
+                        ) : currentPage === "max-duration" ? (
+                            <MaxVideoDuration />
                         ) : (
                             "Nothing"
                         )}
