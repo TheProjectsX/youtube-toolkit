@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const MaxVideoDuration = () => {
     const [maxDurationDetails, setMaxDurationDetails] = useState({
@@ -8,14 +8,21 @@ const MaxVideoDuration = () => {
         s: 0,
     });
 
-    chrome.storage.local.get(["turnOnMaxDuration", "maxDuration"], (result) => {
-        setMaxDurationDetails({
-            isEnabled: result.turnOnMaxDuration ?? false,
-            h: (result.maxDuration ?? [0])[0],
-            m: (result.maxDuration ?? [0, 0])[1],
-            s: (result.maxDuration ?? [0, 0, 0])[2],
-        });
-    });
+    useEffect(() => {
+        chrome.storage.local.get(
+            ["turnOnMaxDuration", "maxDuration"],
+            (result) => {
+                const [h = 0, m = 0, s = 0] = result.maxDuration ?? [];
+
+                setMaxDurationDetails({
+                    isEnabled: result.turnOnMaxDuration ?? false,
+                    h,
+                    m,
+                    s,
+                });
+            }
+        );
+    }, []);
 
     const handleToggle = async () => {
         const newStatus = !maxDurationDetails.isEnabled;
@@ -26,11 +33,6 @@ const MaxVideoDuration = () => {
 
         await chrome.storage.local.set({
             turnOnMaxDuration: newStatus,
-            maxDuration: [
-                maxDurationDetails.h,
-                maxDurationDetails.m,
-                maxDurationDetails.s,
-            ],
         });
     };
 
@@ -40,11 +42,20 @@ const MaxVideoDuration = () => {
             <p className="text-[16px] text-center mb-4">Skip Longer Videos</p>
 
             <form
-                onSubmit={(e) => e.preventDefault()}
+                onSubmit={async (e) => {
+                    e.preventDefault();
+
+                    await chrome.storage.local.set({
+                        maxDuration: [
+                            Number(e.target.hours.value),
+                            Number(e.target.minutes.value),
+                            Number(e.target.seconds.value),
+                        ],
+                    });
+                }}
                 className="flex flex-col items-center gap-3 mb-4"
             >
-                {/* Div containing 3 number inputs with a label which corresponds as time: H M S */}
-                <div className="flex items-center gap-2 mb-3">
+                <div className="flex items-center gap-2.5 mb-3">
                     <div className="relative flex items-center gap-1">
                         <input
                             type="number"
@@ -55,34 +66,32 @@ const MaxVideoDuration = () => {
                             onChange={(e) => {
                                 setMaxDurationDetails({
                                     ...maxDurationDetails,
-                                    h: e.target.value,
+                                    h: Number(e.target.value),
                                 });
                             }}
                             placeholder="H"
-                            className="w-6 text-black"
+                            className="w-12 px-2 py-2 rounded-lg bg-gray-800 text-white text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-600"
                         />
-                        <label className="">H</label>
+                        <label className="text-lg font-medium">H</label>
                     </div>
-                    <div
-                        className="relative flex items-center gap-1
-                    "
-                    >
+                    <div className="relative flex items-center gap-1">
                         <input
                             type="number"
                             name="minutes"
                             step="1"
                             min={0}
+                            max={59}
                             value={maxDurationDetails.m}
                             onChange={(e) => {
                                 setMaxDurationDetails({
                                     ...maxDurationDetails,
-                                    m: e.target.value,
+                                    m: Number(e.target.value),
                                 });
                             }}
                             placeholder="M"
-                            className="w-6 text-black"
+                            className="w-12 px-2 py-2 rounded-lg bg-gray-800 text-white text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-600"
                         />
-                        <label className="">M</label>
+                        <label className="text-lg font-medium">M</label>
                     </div>
                     <div
                         className="relative flex items-center gap-1
@@ -93,17 +102,18 @@ const MaxVideoDuration = () => {
                             name="seconds"
                             step="1"
                             min={0}
+                            max={59}
                             value={maxDurationDetails.s}
                             onChange={(e) => {
                                 setMaxDurationDetails({
                                     ...maxDurationDetails,
-                                    s: e.target.value,
+                                    s: Number(e.target.value),
                                 });
                             }}
                             placeholder="S"
-                            className="w-6 text-black"
+                            className="w-12 px-2 py-2 rounded-lg bg-gray-800 text-white text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-600"
                         />
-                        <label className="">S</label>
+                        <label className="text-lg font-medium">S</label>
                     </div>
                 </div>
 

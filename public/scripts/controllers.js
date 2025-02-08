@@ -236,3 +236,33 @@ const checkPreventPlayback = async () => {
         ); // Save to Session Storage
     }
 };
+
+// Check if Video's duration exceeds the Max Duration Threshold
+const checkMaxDuration = async () => {
+    const turnOnMaxDuration =
+        (await getStorageData("turnOnMaxDuration")) ?? false;
+    const maxDuration = await getStorageData("maxDuration");
+
+    if (!turnOnMaxDuration || !maxDuration) {
+        return;
+    }
+
+    await DOMSettled(500);
+    const videoElement = document.querySelector("#ytd-player video");
+    const videoDuration = videoElement.duration;
+
+    const maxDurationInSeconds =
+        maxDuration[0] * 3600 + maxDuration[1] * 60 + maxDuration[2];
+
+    if (videoDuration > maxDurationInSeconds) {
+        console.log(document.title);
+        const nextVideoButton = document.querySelector(
+            "#ytd-player .ytp-next-button"
+        );
+
+        if (nextVideoButton) {
+            console.log("Skipping Video...");
+            nextVideoButton.click();
+        }
+    }
+};

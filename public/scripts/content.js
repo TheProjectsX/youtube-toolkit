@@ -31,7 +31,8 @@ window.addEventListener("youtubeVideoOpened", async (e) => {
 
     if (!isShorts) {
         updateDislikesData(videoId, isShorts);
-        checkPreventPlayback(e.detail.title);
+        checkPreventPlayback();
+        checkMaxDuration();
     }
 
     const videoSpeed = sessionStorage.getItem("video-speed");
