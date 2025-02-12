@@ -170,18 +170,66 @@ const updateDislikesData = async (videoId, shorts = false) => {
 
 // Check if two words are back-to-back in a string
 const checkWordsBackToBack = (arr1, str2, threshold = 2) => {
+    const safe_words = [
+        "official",
+        "lyrics",
+        "lyric",
+        "video",
+        "audio",
+        "remix",
+        "cover",
+        "live",
+        "karaoke",
+        "instrumental",
+        "version",
+        "acoustic",
+        "extended",
+        "edit",
+        "unplugged",
+        "concert",
+        "performance",
+        "festival",
+        "session",
+        "recording",
+        "rehearsal",
+        "remastered",
+        "bootleg",
+        "radio",
+        "sped",
+        "up",
+        "slowed",
+        "nightcore",
+        "audio",
+        "feat",
+        "ft",
+        "prod",
+        "music",
+        "mv",
+        "hd",
+        "4k",
+        "exclusive",
+        "trailer",
+        "snippet",
+    ];
+
     const words2 = str2.split(/\s+/); // Split str2 into words
 
     for (const str1 of arr1) {
         for (let i = 0; i <= words2.length - threshold; i++) {
             const pair2 = words2.slice(i, i + threshold).join(" "); // Get consecutive words based on threshold
-            if (str1.includes(pair2)) {
+
+            // Check if all words in the pair are in safe_words
+            const allSafe = words2
+                .slice(i, i + threshold)
+                .every((word) => safe_words.includes(word));
+
+            if (!allSafe && str1.includes(pair2)) {
                 return true;
             }
         }
     }
 
-    return false; // No matching pair found in any item of arr1
+    return false; // No valid matching pair found in any item of arr1
 };
 
 // Prevent Playback and Stuff!
