@@ -21,27 +21,6 @@ export const VideoTranscript = () => {
         });
     }, []);
 
-    fetch("https://api.uniscribe.co/tools/youtube-subtitle-download", {
-        headers: {
-            accept: "application/json, text/plain, */*",
-            "accept-language": "en-US,en;q=0.9",
-            "content-type": "application/json",
-            "sec-ch-ua":
-                '"Not A(Brand";v="8", "Chromium";v="132", "Google Chrome";v="132"',
-            "sec-ch-ua-mobile": "?0",
-            "sec-ch-ua-platform": '"Windows"',
-            "sec-fetch-dest": "empty",
-            "sec-fetch-mode": "cors",
-            "sec-fetch-site": "same-site",
-        },
-        referrer: "https://www.uniscribe.co/",
-        referrerPolicy: "strict-origin-when-cross-origin",
-        body: '{"videoId":"2P3i3MHND-Q","langCode":"en-orig","format":"csv"}',
-        method: "POST",
-        mode: "cors",
-        credentials: "omit",
-    });
-
     const handleParseTranscript = async () => {
         setMetadata({ loading: true, error: null });
 

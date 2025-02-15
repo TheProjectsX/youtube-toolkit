@@ -1,17 +1,19 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { sanitizeFileName } from "../utils/utils";
 
 const VideoThumbnailPage = () => {
     const [videoData, setVideoData] = useState({});
 
     // Get the Video ID
-    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-        const title = tabs[0].title.replace("- YouTube", "").trim();
+    useEffect(() => {
+        chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+            const title = tabs[0].title.replace("- YouTube", "").trim();
 
-        const tabUrl = tabs[0].url;
-        const urlObj = new URL(tabUrl);
-        setVideoData({ id: urlObj.searchParams.get("v"), title });
-    });
+            const tabUrl = tabs[0].url;
+            const urlObj = new URL(tabUrl);
+            setVideoData({ id: urlObj.searchParams.get("v"), title });
+        });
+    }, []);
 
     // Handle Download
     const handleDownload = async (e) => {

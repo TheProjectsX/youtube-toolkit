@@ -1,19 +1,24 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const VideoSpeedPage = ({ isYouTubeVideoStatus }) => {
     const [currentSpeed, setCurrentSpeed] = useState(null);
     const predefinedSpeeds = [1, 2, 3, 5, 8, 10];
 
     // Get Speed of Current Video
-    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-        chrome.tabs.sendMessage(
-            tabs[0].id,
-            { action: "get-video-speed", isShorts: isYouTubeVideoStatus[1] },
-            (response) => {
-                setCurrentSpeed(response.speed);
-            }
-        );
-    });
+    useEffect(() => {
+        chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+            chrome.tabs.sendMessage(
+                tabs[0].id,
+                {
+                    action: "get-video-speed",
+                    isShorts: isYouTubeVideoStatus[1],
+                },
+                (response) => {
+                    setCurrentSpeed(response.speed);
+                }
+            );
+        });
+    }, []);
 
     const setVideoSpeed = async (speed) => {
         const [tab] = await chrome.tabs.query({

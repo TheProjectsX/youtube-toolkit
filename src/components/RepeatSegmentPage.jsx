@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { secondsToHHMMSS } from "../utils/utils";
 
 const RepeatSegmentPage = () => {
@@ -8,21 +8,23 @@ const RepeatSegmentPage = () => {
     const [activeTabId, setActiveTabId] = useState();
 
     // Get the Stored Data
-    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-        setActiveTabId(tabs[0].id);
+    useEffect(() => {
+        chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+            setActiveTabId(tabs[0].id);
 
-        if (pointA === "" || pointB === "") {
-            chrome.tabs.sendMessage(
-                tabs[0].id,
-                { action: "get-repeat-segment-initial-value" },
-                (response) => {
-                    setRepeating(response.running);
-                    setPointA(response["repeat-segment--point-a"]);
-                    setPointB(response["repeat-segment--point-b"]);
-                }
-            );
-        }
-    });
+            if (pointA === "" || pointB === "") {
+                chrome.tabs.sendMessage(
+                    tabs[0].id,
+                    { action: "get-repeat-segment-initial-value" },
+                    (response) => {
+                        setRepeating(response.running);
+                        setPointA(response["repeat-segment--point-a"]);
+                        setPointB(response["repeat-segment--point-b"]);
+                    }
+                );
+            }
+        });
+    }, []);
 
     // Handle Changes
     const handleSetPointA = async () => {
