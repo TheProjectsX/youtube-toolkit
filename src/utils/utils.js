@@ -15,3 +15,41 @@ export const secondsToHHMMSS = (seconds) => {
 
     return `${formattedHours}:${formattedMinutes}:${formattedSeconds}`;
 };
+
+export const sanitizeFileName = (name) => {
+    // Define a list of invalid characters for file names
+    const invalidCharacters = /[<>:"/\\|?*\u0000-\u001F]/g; // Reserved by Windows
+    const reservedNames = [
+        "CON",
+        "PRN",
+        "AUX",
+        "NUL",
+        "COM1",
+        "COM2",
+        "COM3",
+        "COM4",
+        "COM5",
+        "COM6",
+        "COM7",
+        "COM8",
+        "COM9",
+        "LPT1",
+        "LPT2",
+        "LPT3",
+        "LPT4",
+        "LPT5",
+        "LPT6",
+        "LPT7",
+        "LPT8",
+        "LPT9",
+    ];
+
+    let sanitized = name.replace(invalidCharacters, "_");
+    sanitized = sanitized.replace(/[. ]+$/, "");
+
+    if (reservedNames.includes(sanitized.toUpperCase())) {
+        sanitized += "_file";
+    }
+
+    return sanitized;
+};

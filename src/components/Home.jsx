@@ -49,6 +49,13 @@ const HomePage = ({ setCurrentPage, isYouTubeVideoStatus }) => {
             title: "Skips videos longer than a certain duration",
             disabled: false,
         },
+        {
+            name: "YouTube Transcript",
+            icon: "📝",
+            page: "video-transcript",
+            title: "Get Transcript of Current Video",
+            disabled: !isYouTubeVideoStatus[0],
+        },
     ];
 
     return (

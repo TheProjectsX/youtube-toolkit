@@ -7,6 +7,7 @@ import VideoThumbnailPage from "./components/VideoThumbnailPage";
 import VideoBookmarksPage from "./components/VideoBookmarksPage";
 import PreventPlaybackPage from "./components/PreventPlaybackPage";
 import MaxVideoDuration from "./components/MaxVideoDuration";
+import { VideoTranscript } from "./components/VideoTranscript";
 
 function App() {
     const [currentPage, setCurrentPage] = useState("home");
@@ -80,6 +81,8 @@ function App() {
                             <PreventPlaybackPage />
                         ) : currentPage === "max-duration" ? (
                             <MaxVideoDuration />
+                        ) : currentPage === "video-transcript" ? (
+                            <VideoTranscript />
                         ) : (
                             "Nothing"
                         )}

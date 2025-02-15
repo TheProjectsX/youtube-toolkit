@@ -1,45 +1,8 @@
 import { useState } from "react";
+import { sanitizeFileName } from "../utils/utils";
 
 const VideoThumbnailPage = () => {
     const [videoData, setVideoData] = useState({});
-
-    function sanitizeFileName(title) {
-        // Define a list of invalid characters for file names
-        const invalidCharacters = /[<>:"/\\|?*\u0000-\u001F]/g; // Reserved by Windows
-        const reservedNames = [
-            "CON",
-            "PRN",
-            "AUX",
-            "NUL",
-            "COM1",
-            "COM2",
-            "COM3",
-            "COM4",
-            "COM5",
-            "COM6",
-            "COM7",
-            "COM8",
-            "COM9",
-            "LPT1",
-            "LPT2",
-            "LPT3",
-            "LPT4",
-            "LPT5",
-            "LPT6",
-            "LPT7",
-            "LPT8",
-            "LPT9",
-        ];
-
-        let sanitized = title.replace(invalidCharacters, "_");
-        sanitized = sanitized.replace(/[. ]+$/, "");
-
-        if (reservedNames.includes(sanitized.toUpperCase())) {
-            sanitized += "_file";
-        }
-
-        return sanitized;
-    }
 
     // Get the Video ID
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {

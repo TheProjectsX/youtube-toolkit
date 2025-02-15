@@ -18,6 +18,8 @@ This Extension contains some useful tools to use while Using YouTube!
     > Prevent YouTube from Playing same type of Videos. Uses Video Titles to check same type of videos. You can use Threshold and Limit to Customize the Changes.
 -   ### Max Duration
     > Only play Videos with a Maximum Duration. Useful when playing Musics.
+-   ### Video Transcript
+    > Download Available Video Transcript in Multiple Formats.
 -   ### MORE INCOMING!!!
 
 ## Screenshots!
@@ -28,8 +30,9 @@ This Extension contains some useful tools to use while Using YouTube!
 ![Repeat Segments](screenshots/segments.png)
 ![Video Thumbnail](screenshots/thumbnail.png)
 ![Video Bookmarks](screenshots/bookmarks.png)
-![Video Thumbnail](screenshots/playback.png)
-![Video Bookmarks](screenshots/maxduration.png)
+![Prevent Playback](screenshots/playback.png)
+![Max Video Duration](screenshots/maxduration.png)
+![Video Transcript](screenshots/transcript.png)
 
 ## How to Use?
 
