@@ -9,19 +9,20 @@ const MaxVideoDuration = () => {
     });
 
     useEffect(() => {
-        chrome.storage.local.get(
-            ["turnOnMaxDuration", "maxDuration"],
-            (result) => {
-                const [h = 0, m = 0, s = 0] = result.maxDuration ?? [];
+        chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+            chrome.tabs.sendMessage(
+                tabs[0].id,
+                {
+                    action: "get-max-duration",
+                },
+                (response) => {
+                    const { isEnabled, time = [] } = response;
+                    const [h = 0, m = 0, s = 0] = time;
 
-                setMaxDurationDetails({
-                    isEnabled: result.turnOnMaxDuration ?? false,
-                    h,
-                    m,
-                    s,
-                });
-            }
-        );
+                    setMaxDurationDetails({ isEnabled, h, m, s });
+                }
+            );
+        });
     }, []);
 
     const handleToggle = async () => {
@@ -31,8 +32,39 @@ const MaxVideoDuration = () => {
             isEnabled: newStatus,
         });
 
-        await chrome.storage.local.set({
-            turnOnMaxDuration: newStatus,
+        chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+            chrome.tabs.sendMessage(
+                tabs[0].id,
+                {
+                    action: "set-max-duration-status",
+                    isEnabled: newStatus,
+                },
+                (response) => {
+                    console.log(response);
+                }
+            );
+        });
+    };
+
+    const handleTimeChange = async (e) => {
+        e.preventDefault();
+        const time = [
+            Number(e.target.hours.value),
+            Number(e.target.minutes.value),
+            Number(e.target.seconds.value),
+        ];
+
+        chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+            chrome.tabs.sendMessage(
+                tabs[0].id,
+                {
+                    action: "set-max-duration-time",
+                    time: time,
+                },
+                (response) => {
+                    console.log(response);
+                }
+            );
         });
     };
 
@@ -42,17 +74,7 @@ const MaxVideoDuration = () => {
             <p className="text-[16px] text-center mb-4">Skip Longer Videos</p>
 
             <form
-                onSubmit={async (e) => {
-                    e.preventDefault();
-
-                    await chrome.storage.local.set({
-                        maxDuration: [
-                            Number(e.target.hours.value),
-                            Number(e.target.minutes.value),
-                            Number(e.target.seconds.value),
-                        ],
-                    });
-                }}
+                onSubmit={handleTimeChange}
                 className="flex flex-col items-center gap-3 mb-4"
             >
                 <div className="flex items-center gap-2.5 mb-3">

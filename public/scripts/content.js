@@ -168,6 +168,27 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 
             await chrome.storage.local.set(data);
             sendResponse({ success: true });
+        } else if (message.action === "get-max-duration") {
+            const timeData = await getStorageData("max-duration-time");
+
+            const status =
+                sessionStorage.getItem("max-duration--on") === "true";
+
+            sendResponse({
+                isEnabled: status,
+                time: timeData ?? [],
+            });
+        } else if (message.action === "set-max-duration-status") {
+            const isEnabled = message.isEnabled;
+
+            // Save Status to Session Storage
+            sessionStorage.setItem("max-duration--on", isEnabled);
+            sendResponse({ success: true });
+        } else if (message.action === "set-max-duration-time") {
+            const time = message.time;
+
+            await chrome.storage.local.set({ "max-duration-time": time });
+            sendResponse({ success: true });
         }
     };
 
