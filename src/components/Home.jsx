@@ -1,3 +1,21 @@
+const captureScreenshotWrapped = async () => {
+    const [tab] = await chrome.tabs.query({
+        active: true,
+        currentWindow: true,
+    });
+
+    chrome.scripting.executeScript({
+        target: { tabId: tab.id },
+        args: [],
+        func: () => {
+            const videoElement = document.querySelector("#ytd-player video");
+
+            // Function exists in scripts/utils.js
+            captureScreenshot(videoElement);
+        },
+    });
+};
+
 const HomePage = ({ setCurrentPage, isYouTubeVideoStatus }) => {
     const features = [
         {
@@ -29,6 +47,20 @@ const HomePage = ({ setCurrentPage, isYouTubeVideoStatus }) => {
             disabled: !isYouTubeVideoStatus[0],
         },
         {
+            name: "ScreenShot",
+            icon: "📸",
+            onClick: () => captureScreenshotWrapped(),
+            title: "Capture ScreenShot of any Frame",
+            disabled: !isYouTubeVideoStatus[0],
+        },
+        {
+            name: "YouTube Transcript",
+            icon: "📝",
+            page: "video-transcript",
+            title: "Get Transcript of Current Video",
+            disabled: !isYouTubeVideoStatus[0],
+        },
+        {
             name: "Bookmarks",
             icon: "🔖",
             page: "video-bookmarks",
@@ -49,13 +81,6 @@ const HomePage = ({ setCurrentPage, isYouTubeVideoStatus }) => {
             title: "Skips videos longer than a certain duration",
             disabled: false,
         },
-        {
-            name: "YouTube Transcript",
-            icon: "📝",
-            page: "video-transcript",
-            title: "Get Transcript of Current Video",
-            disabled: !isYouTubeVideoStatus[0],
-        },
     ];
 
     return (
@@ -71,7 +96,10 @@ const HomePage = ({ setCurrentPage, isYouTubeVideoStatus }) => {
                                 ? "cursor-not-allowed"
                                 : "hover:bg-gray-700"
                         }`}
-                        onClick={() => setCurrentPage(feature.page)}
+                        onClick={() => {
+                            if (feature.page) setCurrentPage(feature.page);
+                            else if (feature.onClick) feature.onClick();
+                        }}
                         title={feature.title}
                         disabled={feature.disabled}
                     >

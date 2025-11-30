@@ -75,14 +75,16 @@ function App() {
                             <RepeatSegmentPage />
                         ) : currentPage === "video-thumbnail" ? (
                             <VideoThumbnailPage />
+                        ) : currentPage === "frame-screenshot" ? (
+                            <VideoTranscript />
+                        ) : currentPage === "video-transcript" ? (
+                            <VideoTranscript />
                         ) : currentPage === "video-bookmarks" ? (
                             <VideoBookmarksPage />
                         ) : currentPage === "prevent-playback" ? (
                             <PreventPlaybackPage />
                         ) : currentPage === "max-duration" ? (
                             <MaxVideoDuration />
-                        ) : currentPage === "video-transcript" ? (
-                            <VideoTranscript />
                         ) : (
                             "Nothing"
                         )}

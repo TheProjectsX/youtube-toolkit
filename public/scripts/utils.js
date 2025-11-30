@@ -52,3 +52,56 @@ const DOMSettled = async (timeout = 100) => {
         observer.observe(document.body, { childList: true, subtree: true });
     });
 };
+
+// Capture Screenshot and Save
+const captureScreenshot = (player, screenshotFormat = "png") => {
+    let extension = screenshotFormat === "jpeg" ? "jpg" : screenshotFormat;
+    let appendixTitle = "." + extension;
+    let title = "";
+
+    // Try to get video title from YouTube
+    let headerEls = document.querySelectorAll(
+        "h1.title.ytd-video-primary-info-renderer"
+    );
+    if (headerEls.length > 0) {
+        title = headerEls[0].innerText.trim();
+    } else {
+        headerEls = document.querySelectorAll("h1.watch-title-container");
+        if (headerEls.length > 0) title = headerEls[0].innerText.trim();
+    }
+
+    let time = player.currentTime;
+    title += " ";
+    let minutes = Math.floor(time / 60);
+    time = Math.floor(time - minutes * 60);
+    if (minutes > 60) {
+        let hours = Math.floor(minutes / 60);
+        minutes -= hours * 60;
+        title += `${hours}h`;
+    }
+    title += `_${minutes}m_${time}s`;
+    title += " " + appendixTitle;
+
+    // Create canvas and draw video frame
+
+    let canvas = document.createElement("canvas");
+    canvas.width = player.videoWidth;
+    canvas.height = player.videoHeight;
+    canvas
+        .getContext("2d")
+        .drawImage(player, 0, 0, canvas.width, canvas.height);
+
+    let downloadLink = document.createElement("a");
+    downloadLink.download = title;
+
+    function DownloadBlob(blob) {
+        downloadLink.href = URL.createObjectURL(blob);
+        downloadLink.click();
+    }
+
+
+    // Download the Image
+    canvas.toBlob(function (blob) {
+        DownloadBlob(blob);
+    }, "image/" + screenshotFormat);
+};
